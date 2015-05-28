@@ -1,0 +1,23 @@
+{
+  "version": "0.0.0",
+  "license": "MIT",
+  "name": "url-search-params",
+  "description": "",
+  "homepage": "https://github.com/WebReflection/url-search-params",
+  "keywords": [],
+  "author": {
+    "name": "",
+    "web": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/WebReflection/url-search-params.git"
+  },
+  "main": "./build/url-search-params.node.js",
+  "scripts": {
+    "test": "node test/.test.js"
+  },
+  "dependencies": {
+    "wru": ">= 0.0.0"
+  }
+}
