@@ -1,1 +1,1 @@
-var main = 
+var URLSearchParams = URLSearchParams || (function () {
