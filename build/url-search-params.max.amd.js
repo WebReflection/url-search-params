@@ -21,70 +21,104 @@ THE SOFTWARE.
 
 */
 define(function () {
+'use strict';
+
+var
+  URLSearchParamsProto = URLSearchParams.prototype,
+  find = /[!'\(\)~]|%20|%00/g,
+  plus = /\+/g,
+  replace = {
+    '!': '%21',
+    "'": '%27',
+    '(': '%28',
+    ')': '%29',
+    '~': '%7E',
+    '%20': '+',
+    '%00': '\x00'
+  },
+  replacer = function (match) {
+    return replace[match];
+  },
+  secret = '__URLSearchParams__:' + Math.random()
+;
+
+function encode(str) {
+  return encodeURIComponent(str).replace(find, replacer);
+}
+
+function decode(str) {
+  return decodeURIComponent(str.replace(plus, ' '));
+}
+
 function URLSearchParams(query) {
+  this[secret] = Object.create(null);
+  if (!query) return;
   for (var
-    name, value, pair,
+    index, value,
     pairs = (query || '').split('&'),
     i = 0,
     length = pairs.length; i < length; i++
   ) {
-    pair = pairs[i].split('=');
-    this.append(
-      decodeURIComponent(pair[0]),
-      decodeURIComponent(pair[1] || '')
-    );
+    value = pairs[i];
+    index = value.indexOf('=');
+    if (-1 < index) {
+      this.append(
+        decode(value.slice(0, index)),
+        decode(value.slice(index + 1))
+      );
+    }
   }
 }
 
-URLSearchParams.prototype.append = function append(name, value) {
-  this[name] = this.has(name) ?
-    [].concat(this[name], '' + value) :
-    '' + value;
+URLSearchParamsProto.append = function append(name, value) {
+  var dict = this[secret];
+  if (name in dict) {
+    dict[name].push('' + value);
+  } else {
+    dict[name] = ['' + value];
+  }
 };
 
-URLSearchParams.prototype.delete = function del(name) {
-  delete this[name];
+URLSearchParamsProto.delete = function del(name) {
+  delete this[secret][name];
 };
 
-URLSearchParams.prototype.get = function get(name) {
-  var value = this[name];
-  return this.has(name) ?
-    (typeof value === 'string' ? value : value[0]) :
-    null;
+URLSearchParamsProto.get = function get(name) {
+  var dict = this[secret];
+  return name in dict ? dict[name][0] : null;
 };
 
-URLSearchParams.prototype.getAll = function getAll(name) {
-  var value = this[name];
-  return this.has(name) ?
-    (typeof value === 'string' ? [value] : value) :
-    [];
+URLSearchParamsProto.getAll = function getAll(name) {
+  var dict = this[secret];
+  return name in dict ? dict[name].slice(0) : [];
 };
 
-URLSearchParams.prototype.has = URLSearchParams.prototype.hasOwnProperty;
-
-URLSearchParams.prototype.set = function set(name, value) {
-  this[name] = '' + value;
+URLSearchParamsProto.has = function has(name) {
+  return name in this[secret];
 };
 
-URLSearchParams.prototype.toJSON = function toJSON() {
+URLSearchParamsProto.set = function set(name, value) {
+  this[secret][name] = ['' + value];
+};
+
+URLSearchParamsProto.toJSON = function toJSON() {
   return {};
 };
 
-URLSearchParams.prototype.toString = function toString() {
-  var query = [], i, name, value;
-  for (name in this) {
-    if (this.has(name)) {
-      name = encodeURIComponent(name);
-      for (
-        i = 0,
-        value = [].concat(this[name]);
-        i < value.length; i++
-      ) {
-        query.push(name + '=' + encodeURIComponent(value[i]));
-      }
+URLSearchParamsProto.toString = function toString() {
+  var dict = this[secret], query = [], i, key, name, value;
+  for (key in dict) {
+    name = encode(key);
+    for (
+      i = 0,
+      value = dict[key];
+      i < value.length; i++
+    ) {
+      query.push(name + '=' + encode(value[i]));
     }
   }
   return query.join('&');
 };
+
 return URLSearchParams;
 });
