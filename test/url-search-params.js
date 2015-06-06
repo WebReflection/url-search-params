@@ -63,4 +63,19 @@ wru.test([
       wru.assert('correct value', usp.get('a') === '12=3');
     }
   }
-]);
+].concat(
+  typeof HTMLAnchorElement === 'function' && 'searchParams' in HTMLAnchorElement.prototype ?
+  [{
+    name: 'HTMLAnchorElement',
+    test: function () {
+      var a = document.createElement('a');
+      var sp = a.searchParams;
+      wru.assert('instance exists', sp instanceof URLSearchParams);
+      wru.assert('sp is an empty string', sp.toString() === '');
+      a.href = '?a=1';
+      wru.assert('sp changed', sp.toString() === 'a=1');
+      sp.append('other', 'value');
+      wru.assert('a changed', a.search === '?a=1&other=value');
+    }
+  }] : []
+));

@@ -4,10 +4,11 @@
 REPO = url-search-params
 
 # make var files
-VAR = src/$(REPO).js
+VAR = src/$(REPO).js \
+			src/html-anchor-element.js
 
 # make node files
-NODE = $(VAR)
+NODE = src/$(REPO).js
 
 # make amd files
 AMD = $(VAR)
@@ -22,7 +23,7 @@ build:
 	make node
 	make amd
 	make test
-#	make hint
+	make hint
 	make size
 
 # build generic version

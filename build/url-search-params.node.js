@@ -22,25 +22,6 @@ THE SOFTWARE.
 */
 'use strict';
 
-var
-  URLSearchParamsProto = URLSearchParams.prototype,
-  find = /[!'\(\)~]|%20|%00/g,
-  plus = /\+/g,
-  replace = {
-    '!': '%21',
-    "'": '%27',
-    '(': '%28',
-    ')': '%29',
-    '~': '%7E',
-    '%20': '+',
-    '%00': '\x00'
-  },
-  replacer = function (match) {
-    return replace[match];
-  },
-  secret = '__URLSearchParams__:' + Math.random()
-;
-
 function encode(str) {
   return encodeURIComponent(str).replace(find, replacer);
 }
@@ -68,6 +49,25 @@ function URLSearchParams(query) {
     }
   }
 }
+
+var
+  URLSearchParamsProto = URLSearchParams.prototype,
+  find = /[!'\(\)~]|%20|%00/g,
+  plus = /\+/g,
+  replace = {
+    '!': '%21',
+    "'": '%27',
+    '(': '%28',
+    ')': '%29',
+    '~': '%7E',
+    '%20': '+',
+    '%00': '\x00'
+  },
+  replacer = function (match) {
+    return replace[match];
+  },
+  secret = '__URLSearchParams__:' + Math.random()
+;
 
 URLSearchParamsProto.append = function append(name, value) {
   var dict = this[secret];
@@ -118,5 +118,4 @@ URLSearchParamsProto.toString = function toString() {
   }
   return query.join('&');
 };
-
 module.exports = global.URLSearchParams || URLSearchParams;
