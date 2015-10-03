@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Url-search-params by WebReflection</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Url-search-params</h1>
+        <p>Simple polyfill for URLSearchParams standard</p>
+
+        <p class="view"><a href="https://github.com/WebReflection/url-search-params">View the Project on GitHub <small>WebReflection/url-search-params</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/WebReflection/url-search-params/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/WebReflection/url-search-params/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/WebReflection/url-search-params">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="url-search-params" class="anchor" href="#url-search-params" aria-hidden="true"><span class="octicon octicon-link"></span></a>url-search-params</h1>
+
+<p><a href="http://travis-ci.org/WebReflection/url-search-params"><img src="https://secure.travis-ci.org/WebReflection/url-search-params.png" alt="build status"></a></p>
+
+<p>This is a polyfill for the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams">URLSearchParams API</a>.</p>
+
+<p>It is possible to simply include <a href="build/url-search-params.js">build/url-search-params.js</a> or grab it via npm.</p>
+
+<pre><code>npm install url-search-params
+</code></pre>
+
+<p>The function is exported directly.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> URLSearchParams <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>url-search-params<span class="pl-pds">'</span></span>);</pre></div>
+
+<p>MIT Style License</p>
+
+<h4>
+<a id="about-htmlanchorelementprototypesearchparams" class="anchor" href="#about-htmlanchorelementprototypesearchparams" aria-hidden="true"><span class="octicon octicon-link"></span></a>About HTMLAnchorElement.prototype.searchParams</h4>
+
+<p>This property is already implemented in Firefox and polyfilled here only for browsers that exposes getters and setters
+through the <code>HTMLAnchorElement.prototype</code>.</p>
+
+<p>In order to know if such property is supported, you <strong>must</strong> do the check as such:</p>
+
+<pre><code>if ('searchParams' in HTMLAnchorElement.prototype) {
+  // polyfill for &lt;a&gt; links supported
+}
+</code></pre>
+
+<p>If you do this check instead:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">if</span> (HTMLAnchorElement.<span class="pl-c1">prototype</span>.searchParams) {
+  <span class="pl-c">// throws a TypeError</span>
+}</pre></div>
+
+<p>this polyfill will reflect natiive behavior, throwing a type error due access to a property in a non instance of <code>HTMLAnchorElement</code>.</p>
+
+<p>Nothing new to learn here, <a href="http://webreflection.blogspot.co.uk/2011/08/please-stop-reassigning-for-no-reason.html">just a reminder</a>.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/WebReflection">WebReflection</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
