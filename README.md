@@ -34,6 +34,6 @@ if (HTMLAnchorElement.prototype.searchParams) {
   // throws a TypeError
 }
 ```
-this polyfill will reflect natiive behavior, throwing a type error due access to a property in a non instance of `HTMLAnchorElement`.
+this polyfill will reflect native behavior, throwing a type error due access to a property in a non instance of `HTMLAnchorElement`.
 
 Nothing new to learn here, [just a reminder](http://webreflection.blogspot.co.uk/2011/08/please-stop-reassigning-for-no-reason.html).
