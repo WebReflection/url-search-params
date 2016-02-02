@@ -5,7 +5,8 @@ REPO = url-search-params
 
 # make var files
 VAR = src/$(REPO).js \
-			src/html-anchor-element.js
+			src/utilities.js\
+			src/upgrades.js
 
 # make node files
 NODE = src/$(REPO).js
