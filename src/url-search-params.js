@@ -78,6 +78,15 @@ URLSearchParamsProto.set = function set(name, value) {
   this[secret][name] = ['' + value];
 };
 
+/*
+URLSearchParamsProto.toBody = function() {
+  return new Blob(
+    [this.toString()],
+    {type: 'application/x-www-form-urlencoded'}
+  );
+};
+*/
+
 URLSearchParamsProto.toJSON = function toJSON() {
   return {};
 };
