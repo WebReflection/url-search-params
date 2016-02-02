@@ -1,7 +1,7 @@
 url-search-params
 =================
 
-[![build status](https://secure.travis-ci.org/WebReflection/url-search-params.png)](http://travis-ci.org/WebReflection/url-search-params)
+[![build status](https://secure.travis-ci.org/WebReflection/url-search-params.svg)](http://travis-ci.org/WebReflection/url-search-params)
 
 This is a polyfill for the [URLSearchParams API](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams).
 
