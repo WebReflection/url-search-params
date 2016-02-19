@@ -101,6 +101,15 @@ URLSearchParamsProto.set = function set(name, value) {
   this[secret][name] = ['' + value];
 };
 
+/*
+URLSearchParamsProto.toBody = function() {
+  return new Blob(
+    [this.toString()],
+    {type: 'application/x-www-form-urlencoded'}
+  );
+};
+*/
+
 URLSearchParamsProto.toJSON = function toJSON() {
   return {};
 };
@@ -118,108 +127,117 @@ URLSearchParamsProto.toString = function toString() {
     }
   }
   return query.join('&');
-};
-var
-  HTMLAE = HTMLAnchorElement,
-  HTMLAEProto = HTMLAE.prototype,
+};var
   dP = Object.defineProperty,
   gOPD = Object.getOwnPropertyDescriptor,
-  searchParams = gOPD(HTMLAEProto, 'searchParams'),
-  href = gOPD(HTMLAEProto, 'href'),
-  search = gOPD(HTMLAEProto, 'search'),
-  polluteSearchParams = (function () {
+  createSearchParamsPollute = function (search) {
     /*jshint validthis:true */
     function append(name, value) {
       URLSearchParamsProto.append.call(this, name, value);
       name = this.toString();
-      search.set.call(this._a, name ? ('?' + name) : '');
+      search.set.call(this._usp, name ? ('?' + name) : '');
     }
     function del(name) {
       URLSearchParamsProto.delete.call(this, name);
       name = this.toString();
-      search.set.call(this._a, name ? ('?' + name) : '');
+      search.set.call(this._usp, name ? ('?' + name) : '');
     }
     function set(name, value) {
       URLSearchParamsProto.set.call(this, name, value);
       name = this.toString();
-      search.set.call(this._a, name ? ('?' + name) : '');
+      search.set.call(this._usp, name ? ('?' + name) : '');
     }
-    return function (sp, a) {
+    return function (sp, value) {
       sp.append = append;
       sp.delete = del;
       sp.set = set;
-      return dP(sp, '_a', {
+      return dP(sp, '_usp', {
         configurable: true,
         writable: true,
-        value: a
+        value: value
       });
     };
-  }()),
-  createSearchParams = function (a, sp) {
-    dP(
-      a, '_searchParams', {
-        configurable: true,
-        writable: true,
-        value: polluteSearchParams(sp, a)
-      }
-    );
-    return sp;
+  },
+  createSearchParamsCreate = function (polluteSearchParams) {
+    return function (obj, sp) {
+      dP(
+        obj, '_searchParams', {
+          configurable: true,
+          writable: true,
+          value: polluteSearchParams(sp, obj)
+        }
+      );
+      return sp;
+    };
   },
   updateSearchParams = function (sp) {
     var append = sp.append;
     sp.append = URLSearchParamsProto.append;
-    URLSearchParams.call(sp, sp._a.search.slice(1));
+    URLSearchParams.call(sp, sp._usp.search.slice(1));
     sp.append = append;
   },
-  verifySearchParams = function (obj) {
-    if (!(obj instanceof HTMLAE)) throw new TypeError(
+  verifySearchParams = function (obj, Class) {
+    if (!(obj instanceof Class)) throw new TypeError(
       "'searchParams' accessed on an object that " +
-      "does not implement interface HTMLAnchorElement."
+      "does not implement interface " + Class.name
     );
+  },
+  upgradeClass = function(Class){
+    var
+      ClassProto = Class.prototype,
+      searchParams = gOPD(ClassProto, 'searchParams'),
+      href = gOPD(ClassProto, 'href'),
+      search = gOPD(ClassProto, 'search'),
+      createSearchParams
+    ;
+    if (!searchParams && search && search.set) {
+      createSearchParams = createSearchParamsCreate(
+        createSearchParamsPollute(search)
+      );
+      Object.defineProperties(
+        ClassProto,
+        {
+          href: {
+            get: function () {
+              return href.get.call(this);
+            },
+            set: function (value) {
+              var sp = this._searchParams;
+              href.set.call(this, value);
+              if (sp) updateSearchParams(sp);
+            }
+          },
+          search: {
+            get: function () {
+              return search.get.call(this);
+            },
+            set: function (value) {
+              var sp = this._searchParams;
+              search.set.call(this, value);
+              if (sp) updateSearchParams(sp);
+            }
+          },
+          searchParams: {
+            get: function () {
+              verifySearchParams(this, Class);
+              return this._searchParams || createSearchParams(
+                this,
+                new URLSearchParams(this.search.slice(1))
+              );
+            },
+            set: function (sp) {
+              verifySearchParams(this, Class);
+              createSearchParams(this, sp);
+            }
+          }
+        }
+      );
+    }
+
   }
 ;
-
-if (!searchParams && search) {
-  Object.defineProperties(
-    HTMLAEProto,
-    {
-      href: {
-        get: function () {
-          return href.get.call(this);
-        },
-        set: function (value) {
-          var sp = this._searchParams;
-          href.set.call(this, value);
-          if (sp) updateSearchParams(sp);
-        }
-      },
-      search: {
-        get: function () {
-          return search.get.call(this);
-        },
-        set: function (value) {
-          var sp = this._searchParams;
-          search.set.call(this, value);
-          if (sp) updateSearchParams(sp);
-        }
-      },
-      searchParams: {
-        get: function () {
-          verifySearchParams(this);
-          return this._searchParams || createSearchParams(
-            this,
-            new URLSearchParams(this.search.slice(1))
-          );
-        },
-        set: function (sp) {
-          verifySearchParams(this);
-          createSearchParams(this, sp);
-        }
-      }
-    }
-  );
-}
-
+upgradeClass(HTMLAnchorElement);
+if (/^function|object$/.test(typeof URL)) upgradeClass(URL);
 
 /*
 
