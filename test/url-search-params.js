@@ -6,7 +6,7 @@ wru.test([
   {
     name: "main",
     test: function () {
-      wru.assert(typeof URLSearchParams == "function");
+      wru.assert(/^function|object$/.test(typeof URLSearchParams));
     }
   }, {
     name: 'basics',
@@ -64,7 +64,7 @@ wru.test([
     }
   }
 ].concat(
-  typeof HTMLAnchorElement === 'function' && 'searchParams' in HTMLAnchorElement.prototype ?
+  /^function|object$/.test(typeof HTMLAnchorElement) && ('searchParams' in HTMLAnchorElement.prototype) ?
   [{
     name: 'HTMLAnchorElement',
     test: function () {

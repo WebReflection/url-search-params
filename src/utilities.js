@@ -61,7 +61,7 @@ var
       search = gOPD(ClassProto, 'search'),
       createSearchParams
     ;
-    if (!searchParams && search) {
+    if (!searchParams && search && search.set) {
       createSearchParams = createSearchParamsCreate(
         createSearchParamsPollute(search)
       );

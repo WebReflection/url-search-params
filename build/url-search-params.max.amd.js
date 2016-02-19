@@ -101,6 +101,15 @@ URLSearchParamsProto.set = function set(name, value) {
   this[secret][name] = ['' + value];
 };
 
+/*
+URLSearchParamsProto.toBody = function() {
+  return new Blob(
+    [this.toString()],
+    {type: 'application/x-www-form-urlencoded'}
+  );
+};
+*/
+
 URLSearchParamsProto.toJSON = function toJSON() {
   return {};
 };
@@ -181,7 +190,7 @@ URLSearchParamsProto.toString = function toString() {
       search = gOPD(ClassProto, 'search'),
       createSearchParams
     ;
-    if (!searchParams && search) {
+    if (!searchParams && search && search.set) {
       createSearchParams = createSearchParamsCreate(
         createSearchParamsPollute(search)
       );
@@ -228,7 +237,7 @@ URLSearchParamsProto.toString = function toString() {
   }
 ;
 upgradeClass(HTMLAnchorElement);
-if (typeof URL === 'function') upgradeClass(URL);
+if (/^function|object$/.test(typeof URL)) upgradeClass(URL);
 
 /*
 

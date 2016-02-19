@@ -1,6 +1,6 @@
 
 upgradeClass(HTMLAnchorElement);
-if (typeof URL === 'function') upgradeClass(URL);
+if (/^function|object$/.test(typeof URL)) upgradeClass(URL);
 
 /*
 
