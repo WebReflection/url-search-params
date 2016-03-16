@@ -62,6 +62,96 @@ wru.test([
       wru.assert('correct escaping', usp.toString() === 'a=12%3D3');
       wru.assert('correct value', usp.get('a') === '12=3');
     }
+  }, {
+    name: 'iterating with keys',
+    test: function () {
+      var usp = new URLSearchParams('a=1&a=2&b=3');
+      var iterator = usp.keys()
+
+      var next = iterator.next();
+      wru.assert('correct iterator value', !next.done);
+      wru.assert('correct iterator value', next.value === 'a');
+
+      next = iterator.next();
+      wru.assert('correct iterator value', !next.done);
+      wru.assert('correct iterator value', next.value === 'a');
+
+      next = iterator.next();
+      wru.assert('correct iterator value', !next.done);
+      wru.assert('correct iterator value', next.value === 'b');
+
+      next = iterator.next();
+      wru.assert('correct iterator value', next.done);
+      wru.assert('correct iterator value', next.value === undefined);
+    }
+  }, {
+    name: 'iterating with values',
+    test: function () {
+      var usp = new URLSearchParams('a=1&a=2&b=3');
+      var iterator = usp.values()
+
+      var next = iterator.next();
+      wru.assert('correct iterator value', !next.done);
+      wru.assert('correct iterator value', next.value === '1');
+
+      next = iterator.next();
+      wru.assert('correct iterator value', !next.done);
+      wru.assert('correct iterator value', next.value === '2');
+
+      next = iterator.next();
+      wru.assert('correct iterator value', !next.done);
+      wru.assert('correct iterator value', next.value === '3');
+
+      next = iterator.next();
+      wru.assert('correct iterator value', next.done);
+      wru.assert('correct iterator value', next.value === undefined);
+    }
+  }, {
+    name: 'iterating with entries',
+    test: function () {
+      var usp = new URLSearchParams('a=1&a=2&b=3');
+      var iterator = usp.entries()
+
+      var next = iterator.next();
+      wru.assert('correct iterator value', !next.done);
+      wru.assert('correct iterator value', next.value[0] === 'a' && next.value[1] === '1');
+
+      next = iterator.next();
+      wru.assert('correct iterator value', !next.done);
+      wru.assert('correct iterator value', next.value[0] === 'a' && next.value[1] === '2');
+
+      next = iterator.next();
+      wru.assert('correct iterator value', !next.done);
+      wru.assert('correct iterator value', next.value[0] === 'b' && next.value[1] === '3');
+
+      next = iterator.next();
+      wru.assert('correct iterator value', next.done);
+      wru.assert('correct iterator value', next.value === undefined);
+    }
+  }, {
+    name: 'iterating with forEach',
+    test: function () {
+      var usp = new URLSearchParams('a=1&a=2&b=3');
+
+      var results = [];
+      usp.forEach(function(value, key, object) {
+        results.push({value: value, key: key, object: object});
+      });
+
+      wru.assert('correct loop count', results.length === 3);
+
+      wru.assert('correct loop key', results[0].key === 'a');
+      wru.assert('correct loop value', results[0].value === '1');
+      wru.assert('correct loop object', results[0].object === usp);
+
+      wru.assert('correct loop key', results[1].key === 'a');
+      wru.assert('correct loop value', results[1].value === '2');
+      wru.assert('correct loop object', results[1].object === usp);
+
+      wru.assert('correct loop key', results[2].key === 'b');
+      wru.assert('correct loop value', results[2].value === '3');
+      wru.assert('correct loop object', results[2].object === usp);
+    }
   }
 ].concat(
   /^function|object$/.test(typeof HTMLAnchorElement) && ('searchParams' in HTMLAnchorElement.prototype) ?
