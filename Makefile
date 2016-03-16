@@ -81,9 +81,9 @@ clean:
 test:
 	npm test
 
-# launch polpetta (ctrl+click to open the page)
+# launch tiny-cdn (ctrl+click to open the page)
 web:
-	node node_modules/polpetta/build/polpetta ./
+	node node_modules/.bin/tiny-cdn run
 
 # markdown the readme and view it
 preview:
@@ -121,7 +121,7 @@ dependencies:
 	rm -rf node_modules
 	mkdir node_modules
 	npm install wru
-	npm install polpetta
+	npm install tiny-cdn
 	npm install uglify-js@1
 	npm install jshint
 	npm install markdown

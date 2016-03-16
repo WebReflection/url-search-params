@@ -66,8 +66,17 @@ var
   replacer = function (match) {
     return replace[match];
   },
+  iterable = isIterable(),
   secret = '__URLSearchParams__:' + Math.random()
 ;
+
+function isIterable() {
+  try {
+    return !!Symbol.iterator;
+  } catch(error) {
+    return false;
+  }
+}
 
 URLSearchParamsProto.append = function append(name, value) {
   var dict = this[secret];
@@ -100,6 +109,76 @@ URLSearchParamsProto.set = function set(name, value) {
   this[secret][name] = ['' + value];
 };
 
+URLSearchParamsProto.forEach = function forEach(callback, thisArg) {
+  var dict = this[secret];
+  Object.getOwnPropertyNames(dict).forEach(function(name) {
+    dict[name].forEach(function(value) {
+      callback.call(thisArg, value, name, this);
+    }, this);
+  }, this);
+};
+
+URLSearchParamsProto.keys = function keys() {
+  var items = [];
+  this.forEach(function(value, name) { items.push(name); });
+  var iterator = {
+    next: function() {
+      var value = items.shift();
+      return {done: value === undefined, value: value};
+    }
+  };
+
+  if (iterable) {
+    iterator[Symbol.iterator] = function() {
+      return iterator;
+    };
+  }
+
+  return iterator;
+};
+
+URLSearchParamsProto.values = function values() {
+  var items = [];
+  this.forEach(function(value) { items.push(value); });
+  var iterator = {
+    next: function() {
+      var value = items.shift();
+      return {done: value === undefined, value: value};
+    }
+  };
+
+  if (iterable) {
+    iterator[Symbol.iterator] = function() {
+      return iterator;
+    };
+  }
+
+  return iterator;
+};
+
+URLSearchParamsProto.entries = function entries() {
+  var items = [];
+  this.forEach(function(value, name) { items.push([name, value]); });
+  var iterator = {
+    next: function() {
+      var value = items.shift();
+      return {done: value === undefined, value: value};
+    }
+  };
+
+  if (iterable) {
+    iterator[Symbol.iterator] = function() {
+      return iterator;
+    };
+  }
+
+  return iterator;
+};
+
+if (iterable) {
+  URLSearchParamsProto[Symbol.iterator] = URLSearchParamsProto.entries;
+}
+
 /*
 URLSearchParamsProto.toBody = function() {
   return new Blob(
@@ -127,4 +206,5 @@ URLSearchParamsProto.toString = function toString() {
   }
   return query.join('&');
 };
+
 module.exports = global.URLSearchParams || URLSearchParams;
