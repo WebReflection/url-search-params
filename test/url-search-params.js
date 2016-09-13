@@ -9,24 +9,26 @@ wru.test([
       wru.assert(/^function|object$/.test(typeof URLSearchParams));
     }
   }, {
-    name: 'basics',
+    name: 'basics with leading "?"',
     test: function () {
-      var usp = new URLSearchParams('a=1&b=2');
-      wru.assert('has keys', usp.has('a') && usp.has('b'));
+      var usp = new URLSearchParams('a=1&b=2&c');
+      wru.assert('has keys', usp.has('a') && usp.has('b') && usp.has('c'));
       wru.assert('a returns right value', usp.get('a') === '1');
       wru.assert('b returns right value', usp.get('b') === '2');
+      wru.assert('c returns right value', usp.get('c') === '');
       wru.assert('a getAll returns right value', usp.getAll('a').join(',') === '1');
       wru.assert('b getAll returns right value', usp.getAll('b').join(',') === '2');
+      wru.assert('c getAll returns right value', usp.getAll('c').join(',') === '');
       usp.append('a', '3');
       wru.assert('append adds values', usp.getAll('a').join(',') === '1,3');
       wru.assert('append preserves get', usp.get('a') === '1');
-      wru.assert('append does not affect others', usp.getAll('b').join(',') === '2');
+      wru.assert('append does not affect others', usp.getAll('b').join(',') === '2' && usp.getAll('c').join(',') === '');
       usp.set('a', '4');
       wru.assert('set overwrites known values', usp.getAll('a').join(',') === '4');
       usp['delete']('a');
       wru.assert('usp can delete', usp.has('a') === false);
       wru.assert('usp can return null', usp.get('a') === null);
-      wru.assert('usp to string works as expected', usp.toString() === 'b=2');
+      wru.assert('usp to string works as expected', usp.toString() === 'b=2&c=');
     }
   }, {
     name: 'basics with leading "?"',
