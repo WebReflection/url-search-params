@@ -27,6 +27,11 @@ function URLSearchParams(query) {
         decode(value.slice(0, index)),
         decode(value.slice(index + 1))
       );
+    } else if (value.length){
+      this.append(
+        decode(value),
+        ''
+      );
     }
   }
 }
