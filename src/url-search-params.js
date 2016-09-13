@@ -11,6 +11,9 @@ function decode(str) {
 function URLSearchParams(query) {
   this[secret] = Object.create(null);
   if (!query) return;
+  if (query.charAt(0) === '?') {
+    query = query.slice(1);
+  }
   for (var
     index, value,
     pairs = (query || '').split('&'),
