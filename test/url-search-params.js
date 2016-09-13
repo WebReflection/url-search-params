@@ -9,7 +9,7 @@ wru.test([
       wru.assert(/^function|object$/.test(typeof URLSearchParams));
     }
   }, {
-    name: 'basics with leading "?"',
+    name: 'basics (including parameters without values)',
     test: function () {
       var usp = new URLSearchParams('a=1&b=2&c');
       wru.assert('has keys', usp.has('a') && usp.has('b') && usp.has('c'));
