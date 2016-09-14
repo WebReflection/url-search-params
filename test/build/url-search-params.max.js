@@ -34,6 +34,9 @@ function decode(str) {
 function URLSearchParams(query) {
   this[secret] = Object.create(null);
   if (!query) return;
+  if (query.charAt(0) === '?') {
+    query = query.slice(1);
+  }
   for (var
     index, value,
     pairs = (query || '').split('&'),
@@ -46,6 +49,11 @@ function URLSearchParams(query) {
       this.append(
         decode(value.slice(0, index)),
         decode(value.slice(index + 1))
+      );
+    } else if (value.length){
+      this.append(
+        decode(value),
+        ''
       );
     }
   }
@@ -67,8 +75,17 @@ var
   replacer = function (match) {
     return replace[match];
   },
+  iterable = isIterable(),
   secret = '__URLSearchParams__:' + Math.random()
 ;
+
+function isIterable() {
+  try {
+    return !!Symbol.iterator;
+  } catch(error) {
+    return false;
+  }
+}
 
 URLSearchParamsProto.append = function append(name, value) {
   var dict = this[secret];
@@ -101,6 +118,76 @@ URLSearchParamsProto.set = function set(name, value) {
   this[secret][name] = ['' + value];
 };
 
+URLSearchParamsProto.forEach = function forEach(callback, thisArg) {
+  var dict = this[secret];
+  Object.getOwnPropertyNames(dict).forEach(function(name) {
+    dict[name].forEach(function(value) {
+      callback.call(thisArg, value, name, this);
+    }, this);
+  }, this);
+};
+
+URLSearchParamsProto.keys = function keys() {
+  var items = [];
+  this.forEach(function(value, name) { items.push(name); });
+  var iterator = {
+    next: function() {
+      var value = items.shift();
+      return {done: value === undefined, value: value};
+    }
+  };
+
+  if (iterable) {
+    iterator[Symbol.iterator] = function() {
+      return iterator;
+    };
+  }
+
+  return iterator;
+};
+
+URLSearchParamsProto.values = function values() {
+  var items = [];
+  this.forEach(function(value) { items.push(value); });
+  var iterator = {
+    next: function() {
+      var value = items.shift();
+      return {done: value === undefined, value: value};
+    }
+  };
+
+  if (iterable) {
+    iterator[Symbol.iterator] = function() {
+      return iterator;
+    };
+  }
+
+  return iterator;
+};
+
+URLSearchParamsProto.entries = function entries() {
+  var items = [];
+  this.forEach(function(value, name) { items.push([name, value]); });
+  var iterator = {
+    next: function() {
+      var value = items.shift();
+      return {done: value === undefined, value: value};
+    }
+  };
+
+  if (iterable) {
+    iterator[Symbol.iterator] = function() {
+      return iterator;
+    };
+  }
+
+  return iterator;
+};
+
+if (iterable) {
+  URLSearchParamsProto[Symbol.iterator] = URLSearchParamsProto.entries;
+}
+
 /*
 URLSearchParamsProto.toBody = function() {
   return new Blob(
@@ -127,7 +214,8 @@ URLSearchParamsProto.toString = function toString() {
     }
   }
   return query.join('&');
-};var
+};
+var
   dP = Object.defineProperty,
   gOPD = Object.getOwnPropertyDescriptor,
   createSearchParamsPollute = function (search) {
@@ -237,7 +325,7 @@ URLSearchParamsProto.toString = function toString() {
   }
 ;
 upgradeClass(HTMLAnchorElement);
-if (/^function|object$/.test(typeof URL)) upgradeClass(URL);
+if (/^function|object$/.test(typeof URL) && URL.prototype) upgradeClass(URL);
 
 /*
 
