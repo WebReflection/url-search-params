@@ -1,7 +1,7 @@
 {
   "name": "url-search-params",
   "description": "Simple polyfill for URLSearchParams standard",
-  "main": "./build/url-search-params.node.js",
+  "main": "./build/url-search-params.max.js",
   "authors": [
     "Andrea Giammarchi"
   ],
