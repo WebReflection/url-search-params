@@ -16,7 +16,7 @@ function URLSearchParams(query) {
   }
   for (var
     index, value,
-    pairs = (query || '').split('&'),
+    pairs = query.split('&'),
     i = 0,
     length = pairs.length; i < length; i++
   ) {
