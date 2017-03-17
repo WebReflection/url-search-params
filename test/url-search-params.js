@@ -174,6 +174,54 @@ wru.test([
       wru.assert('correct loop value', results[2].value === '3');
       wru.assert('correct loop object', results[2].object === usp);
     }
+  }, {
+    name: 'sequence',
+    test: function () {
+       var usp = new URLSearchParams([['a', '1'], ['b', '3'], ['a', '2']]);
+
+      var results = [];
+      usp.forEach(function(value, key, object) {
+        results.push({value: value, key: key, object: object});
+      });
+
+      wru.assert('correct loop count', results.length === 3);
+
+      wru.assert('correct loop key', results[0].key === 'a');
+      wru.assert('correct loop value', results[0].value === '1');
+      wru.assert('correct loop object', results[0].object === usp);
+
+      wru.assert('correct loop key', results[1].key === 'a');
+      wru.assert('correct loop value', results[1].value === '2');
+      wru.assert('correct loop object', results[1].object === usp);
+
+      wru.assert('correct loop key', results[2].key === 'b');
+      wru.assert('correct loop value', results[2].value === '3');
+      wru.assert('correct loop object', results[2].object === usp);
+    }
+  }, {
+    name: 'record',
+    test: function () {
+       var usp = new URLSearchParams({a: ['1', '2'], b: '3'});
+
+      var results = [];
+      usp.forEach(function(value, key, object) {
+        results.push({value: value, key: key, object: object});
+      });
+
+      wru.assert('correct loop count', results.length === 3);
+
+      wru.assert('correct loop key', results[0].key === 'a');
+      wru.assert('correct loop value', results[0].value === '1');
+      wru.assert('correct loop object', results[0].object === usp);
+
+      wru.assert('correct loop key', results[1].key === 'a');
+      wru.assert('correct loop value', results[1].value === '2');
+      wru.assert('correct loop object', results[1].object === usp);
+
+      wru.assert('correct loop key', results[2].key === 'b');
+      wru.assert('correct loop value', results[2].value === '3');
+      wru.assert('correct loop object', results[2].object === usp);
+    }
   }
 ].concat(
   /^function|object$/.test(typeof HTMLAnchorElement) && ('searchParams' in HTMLAnchorElement.prototype) ?

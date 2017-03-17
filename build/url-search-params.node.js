@@ -22,43 +22,58 @@ THE SOFTWARE.
 */
 'use strict';
 
-function encode(str) {
-  return encodeURIComponent(str).replace(find, replacer);
-}
-
-function decode(str) {
-  return decodeURIComponent(str.replace(plus, ' '));
-}
-
 function URLSearchParams(query) {
-  this[secret] = Object.create(null);
+  var
+    index, key, value,
+    pairs, i, length,
+    dict = Object.create(null)
+  ;
+  this[secret] = dict;
   if (!query) return;
-  if (query.charAt(0) === '?') {
-    query = query.slice(1);
-  }
-  for (var
-    index, value,
-    pairs = (query || '').split('&'),
-    i = 0,
-    length = pairs.length; i < length; i++
-  ) {
-    value = pairs[i];
-    index = value.indexOf('=');
-    if (-1 < index) {
-      this.append(
-        decode(value.slice(0, index)),
-        decode(value.slice(index + 1))
-      );
-    } else if (value.length){
-      this.append(
-        decode(value),
-        ''
-      );
+  if (typeof query === 'string') {
+    if (query.charAt(0) === '?') {
+      query = query.slice(1);
+    }
+    for (
+      pairs = query.split('&'),
+      i = 0,
+      length = pairs.length; i < length; i++
+    ) {
+      value = pairs[i];
+      index = value.indexOf('=');
+      if (-1 < index) {
+        appendTo(
+          dict,
+          decode(value.slice(0, index)),
+          decode(value.slice(index + 1))
+        );
+      } else if (value.length){
+        appendTo(
+          dict,
+          decode(value),
+          ''
+        );
+      }
+    }
+  } else {
+    if (isArray(query)) {
+      for (
+        i = 0,
+        length = query.length; i < length; i++
+      ) {
+        value = query[i];
+        appendTo(dict, value[0], value[1]);
+      }
+    } else {
+      for (key in query) {
+         appendTo(dict, key, query[key]);
+      }
     }
   }
 }
 
 var
+  isArray = Array.isArray,
   URLSearchParamsProto = URLSearchParams.prototype,
   find = /[!'\(\)~]|%20|%00/g,
   plus = /\+/g,
@@ -78,6 +93,22 @@ var
   secret = '__URLSearchParams__:' + Math.random()
 ;
 
+function appendTo(dict, name, value) {
+  if (name in dict) {
+    dict[name].push('' + value);
+  } else {
+    dict[name] = isArray(value) ? value : ['' + value];
+  }
+}
+
+function decode(str) {
+  return decodeURIComponent(str.replace(plus, ' '));
+}
+
+function encode(str) {
+  return encodeURIComponent(str).replace(find, replacer);
+}
+
 function isIterable() {
   try {
     return !!Symbol.iterator;
@@ -87,12 +118,7 @@ function isIterable() {
 }
 
 URLSearchParamsProto.append = function append(name, value) {
-  var dict = this[secret];
-  if (name in dict) {
-    dict[name].push('' + value);
-  } else {
-    dict[name] = ['' + value];
-  }
+  appendTo(this[secret], name, value);
 };
 
 URLSearchParamsProto.delete = function del(name) {
