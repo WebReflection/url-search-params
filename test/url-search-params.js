@@ -175,9 +175,26 @@ wru.test([
       wru.assert('correct loop object', results[2].object === usp);
     }
   }, {
+    name: '.sort()',
+    test: function () {
+      var usp = new URLSearchParams();
+      usp.append('a', 3);
+      usp.append('b', 2);
+      usp.append('a', 1);
+      usp.sort();
+      wru.assert('preserved order', usp.toString() === 'a=3&a=1&b=2');
+
+      // https://url.spec.whatwg.org/#example-searchparams-sort
+      usp = new URLSearchParams();
+      usp.append('q', '🏳️‍🌈');
+      usp.append('key', 'e1f7bc78');
+      usp.sort();
+      wru.assert('correct sort', usp.toString() === 'key=e1f7bc78&q=%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88');
+    }
+  }, {
     name: 'sequence',
     test: function () {
-       var usp = new URLSearchParams([['a', '1'], ['b', '3'], ['a', '2']]);
+      var usp = new URLSearchParams([['a', '1'], ['b', '3'], ['a', '2']]);
 
       var results = [];
       usp.forEach(function(value, key, object) {
@@ -185,6 +202,10 @@ wru.test([
       });
 
       wru.assert('correct loop count', results.length === 3);
+
+      results.sort(function (a, b) {
+        return a.key < b.key ? -1 : (a.key === b.key ? 0 : 1);
+      });
 
       wru.assert('correct loop key', results[0].key === 'a');
       wru.assert('correct loop value', results[0].value === '1');
@@ -201,7 +222,7 @@ wru.test([
   }, {
     name: 'record',
     test: function () {
-       var usp = new URLSearchParams({a: ['1', '2'], b: '3'});
+      var usp = new URLSearchParams({a: ['1', '2'], b: '3'});
 
       var results = [];
       usp.forEach(function(value, key, object) {
@@ -209,6 +230,10 @@ wru.test([
       });
 
       wru.assert('correct loop count', results.length === 3);
+
+      results.sort(function (a, b) {
+        return a.key < b.key ? -1 : (a.key === b.key ? 0 : 1);
+      });
 
       wru.assert('correct loop key', results[0].key === 'a');
       wru.assert('correct loop value', results[0].value === '1');

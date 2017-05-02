@@ -30,7 +30,7 @@ build:
 # build generic version
 var:
 	mkdir -p build
-	cat template/var.before $(VAR) template/var.after >build/no-copy.$(REPO).max.js
+	cat template/var.before $(VAR) template/var.after src/$(REPO)-sort.js >build/no-copy.$(REPO).max.js
 	node node_modules/uglify-js/bin/uglifyjs --verbose build/no-copy.$(REPO).max.js >build/no-copy.$(REPO).js
 	cat template/license.before LICENSE.txt template/license.after build/no-copy.$(REPO).max.js >build/$(REPO).max.js
 	cat template/copyright build/no-copy.$(REPO).js >build/$(REPO).js
@@ -40,12 +40,12 @@ var:
 # build node.js version
 node:
 	mkdir -p build
-	cat template/license.before LICENSE.txt template/license.after template/node.before $(NODE) template/node.after >build/$(REPO).node.js
+	cat template/license.before LICENSE.txt template/license.after template/node.before $(NODE) template/node.after src/$(REPO)-sort.js >build/$(REPO).node.js
 
 # build AMD version
 amd:
 	mkdir -p build
-	cat template/amd.before $(AMD) template/amd.after >build/no-copy.$(REPO).max.amd.js
+	cat template/amd.before $(AMD) src/$(REPO)-sort.js template/amd.after >build/no-copy.$(REPO).max.amd.js
 	node node_modules/uglify-js/bin/uglifyjs --verbose build/no-copy.$(REPO).max.amd.js >build/no-copy.$(REPO).amd.js
 	cat template/license.before LICENSE.txt template/license.after build/no-copy.$(REPO).max.amd.js >build/$(REPO).max.amd.js
 	cat template/copyright build/no-copy.$(REPO).amd.js >build/$(REPO).amd.js
