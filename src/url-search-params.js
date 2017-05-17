@@ -67,7 +67,6 @@ var
   replacer = function (match) {
     return replace[match];
   },
-  iterable = isIterable(),
   secret = '__URLSearchParams__:' + Math.random()
 ;
 
@@ -85,14 +84,6 @@ function decode(str) {
 
 function encode(str) {
   return encodeURIComponent(str).replace(find, replacer);
-}
-
-function isIterable() {
-  try {
-    return !!Symbol.iterator;
-  } catch(error) {
-    return false;
-  }
 }
 
 URLSearchParamsProto.append = function append(name, value) {
@@ -129,67 +120,6 @@ URLSearchParamsProto.forEach = function forEach(callback, thisArg) {
     }, this);
   }, this);
 };
-
-URLSearchParamsProto.keys = function keys() {
-  var items = [];
-  this.forEach(function(value, name) { items.push(name); });
-  var iterator = {
-    next: function() {
-      var value = items.shift();
-      return {done: value === undefined, value: value};
-    }
-  };
-
-  if (iterable) {
-    iterator[Symbol.iterator] = function() {
-      return iterator;
-    };
-  }
-
-  return iterator;
-};
-
-URLSearchParamsProto.values = function values() {
-  var items = [];
-  this.forEach(function(value) { items.push(value); });
-  var iterator = {
-    next: function() {
-      var value = items.shift();
-      return {done: value === undefined, value: value};
-    }
-  };
-
-  if (iterable) {
-    iterator[Symbol.iterator] = function() {
-      return iterator;
-    };
-  }
-
-  return iterator;
-};
-
-URLSearchParamsProto.entries = function entries() {
-  var items = [];
-  this.forEach(function(value, name) { items.push([name, value]); });
-  var iterator = {
-    next: function() {
-      var value = items.shift();
-      return {done: value === undefined, value: value};
-    }
-  };
-
-  if (iterable) {
-    iterator[Symbol.iterator] = function() {
-      return iterator;
-    };
-  }
-
-  return iterator;
-};
-
-if (iterable) {
-  URLSearchParamsProto[Symbol.iterator] = URLSearchParamsProto.entries;
-}
 
 /*
 URLSearchParamsProto.toBody = function() {
