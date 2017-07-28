@@ -1,7 +1,7 @@
 url-search-params
 =================
 
-[![build status](https://secure.travis-ci.org/WebReflection/url-search-params.svg)](http://travis-ci.org/WebReflection/url-search-params) [![CDNJS version](https://img.shields.io/cdnjs/v/url-search-params.svg)](https://cdnjs.com/libraries/url-search-params)
+[![build status](https://secure.travis-ci.org/WebReflection/url-search-params.svg)](http://travis-ci.org/WebReflection/url-search-params) [![CDNJS version](https://img.shields.io/cdnjs/v/url-search-params.svg)](https://cdnjs.com/libraries/url-search-params) [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&style=flat)](https://github.com/WebReflection/donate)
 
 This is a polyfill for the [URLSearchParams API](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams).
 
