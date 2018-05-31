@@ -18,6 +18,20 @@ var URLSearchParams = require('url-search-params');
 
 MIT Style License
 
+### iOS 10 + other platforms bug
+
+In case you'd like to replace the broken global native constructor, you can check some well known issue before including this polyfill on your project/page.
+
+```html
+<script>
+try { if (new URLSearchParams('q=%2B').get('q') !== '+') throw {}; }
+catch (error) {
+  window.URLSearchParams = void 0;
+  document.write('<script src="/js/url-search-params.js"><'+'/script>');
+}
+</script>
+```
+
 #### About HTMLAnchorElement.prototype.searchParams
 This property is already implemented in Firefox and polyfilled here only for browsers that exposes getters and setters
 through the `HTMLAnchorElement.prototype`.
