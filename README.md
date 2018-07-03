@@ -18,6 +18,11 @@ var URLSearchParams = require('url-search-params');
 
 MIT Style License
 
+# V1 `package.json` Release
+
+Please change bundler or complain to your bundler project if version 1 doesn't work anymore, they decided to use the browsder field instead of the main CJS standard way to require the code and I think they should fix it.
+
+
 ### iOS 10 + other platforms bug
 
 In case you'd like to replace the broken global native constructor, you can check some well known issue before including this polyfill on your project/page.
