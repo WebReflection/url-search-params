@@ -18,7 +18,8 @@
     "type": "git",
     "url": "git://github.com/WebReflection/url-search-params.git"
   },
-  "main": "./build/url-search-params.node.js",
+  "browser": "build/url-search-params.js",
+  "main": "build/url-search-params.node.js",
   "scripts": {
     "test": "node test/.test.js"
   },
