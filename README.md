@@ -20,7 +20,9 @@ MIT Style License
 
 # V1 `package.json` Release
 
-Please change bundler or complain to your bundler project if version 1 doesn't work anymore, they decided to use the browsder field instead of the main CJS standard way to require the code and I think they should fix it.
+Please change bundler or complain to your bundler project if version 1 doesn't work anymore, they decided to use the browser field instead of the main CJS standard way to require the code and I think they should fix it.
+
+Related: https://github.com/webpack/webpack/issues/7646
 
 
 ### iOS 10 + other platforms bug
