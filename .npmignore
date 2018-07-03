@@ -4,3 +4,6 @@ template/*
 node_modules/*
 Makefile
 index.html
+.travis.yml
+bower.json
+template/license.*
