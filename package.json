@@ -1,5 +1,5 @@
 {
-  "version": "0.10.1",
+  "version": "1.0.0",
   "license": "MIT",
   "name": "url-search-params",
   "description": "Simple polyfill for URLSearchParams standard",
