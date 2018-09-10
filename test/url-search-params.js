@@ -229,23 +229,15 @@ wru.test([
         results.push({value: value, key: key, object: object});
       });
 
-      wru.assert('correct loop count', results.length === 3);
-
-      results.sort(function (a, b) {
-        return a.key < b.key ? -1 : (a.key === b.key ? 0 : 1);
-      });
+      wru.assert('correct loop count', results.length === 2);
 
       wru.assert('correct loop key', results[0].key === 'a');
-      wru.assert('correct loop value', results[0].value === '1');
+      wru.assert('correct loop value', results[0].value === '1,2');
       wru.assert('correct loop object', results[0].object === usp);
 
-      wru.assert('correct loop key', results[1].key === 'a');
-      wru.assert('correct loop value', results[1].value === '2');
+      wru.assert('correct loop key', results[1].key === 'b');
+      wru.assert('correct loop value', results[1].value === '3');
       wru.assert('correct loop object', results[1].object === usp);
-
-      wru.assert('correct loop key', results[2].key === 'b');
-      wru.assert('correct loop value', results[2].value === '3');
-      wru.assert('correct loop object', results[2].object === usp);
     }
   }
 ].concat(
@@ -261,6 +253,18 @@ wru.test([
       wru.assert('sp changed', sp.toString() === 'a=1');
       sp.append('other', 'value');
       wru.assert('a changed', a.search === '?a=1&other=value');
+    }
+  }] : []
+).concat(
+  typeof FormData === 'function' && FormData.prototype.forEach ?
+  [{
+    name: 'FormData',
+    test: function () {
+      var formData = new FormData();
+      formData.append('some-key', 'some-value');
+      formData.append('some-key', 'some-other');
+      var sp = new URLSearchParams(formData);
+      wru.assert('correct values', sp.getAll('some-key').join(',') === 'some-value,some-other');
     }
   }] : []
 ));

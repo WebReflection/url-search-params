@@ -64,6 +64,8 @@ function URLSearchParams(query) {
         value = query[i];
         appendTo(dict, value[0], value[1]);
       }
+    } else if (query.forEach) {
+      query.forEach(addEach, dict);
     } else {
       for (key in query) {
          appendTo(dict, key, query[key]);
@@ -92,12 +94,17 @@ var
   secret = '__URLSearchParams__:' + Math.random()
 ;
 
+function addEach(value, key) {
+  /* jshint validthis:true */
+  appendTo(this, key, value);
+}
+
 function appendTo(dict, name, value) {
-  if (name in dict) {
-    dict[name].push('' + value);
-  } else {
-    dict[name] = isArray(value) ? value : ['' + value];
-  }
+  var res = isArray(value) ? value.join(',') : value;
+  if (name in dict)
+    dict[name].push(res);
+  else
+    dict[name] = [res];
 }
 
 function decode(str) {
