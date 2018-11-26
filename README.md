@@ -3,6 +3,14 @@ url-search-params
 
 [![build status](https://secure.travis-ci.org/WebReflection/url-search-params.svg)](http://travis-ci.org/WebReflection/url-search-params) [![CDNJS version](https://img.shields.io/cdnjs/v/url-search-params.svg)](https://cdnjs.com/libraries/url-search-params) [![donate](https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&style=flat)](https://github.com/WebReflection/donate)
 
+# Deprecated
+
+This polyfill has been improved, better tested, and moved under the [ungap](https://ungap.github.io) umbrella.
+
+The new version is available as [@ungap/url-search-params](https://github.com/ungap/url-search-params).
+
+- - -
+
 This is a polyfill for the [URLSearchParams API](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams).
 
 It is possible to simply include [build/url-search-params.js](build/url-search-params.js) or grab it via npm.
